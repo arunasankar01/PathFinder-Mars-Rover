@@ -1,0 +1,175 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Fri Jul 24 16:11:24 2020
+
+@author: radhakrishna
+"""
+
+def neigh(r,c,row_queue,column_queue,visited,m,nodes_in_next_layer): 
+    i=0
+    R=5
+    C=6
+    dr=[0,-1,-1,1,0,1,1,-1]
+    dc=[-1,-1,0,-1,1,1,0,1]
+    for i in range(len(dr)):
+        rr= r+ dr[i]
+        cc= c+ dc[i]
+    
+        if rr<0 or cc<0 : 
+          continue
+        if rr>=R or cc>=C :
+          continue
+    
+        if visited[rr][cc]== True:
+          continue
+        if m[rr][cc] == 1:
+          continue
+         
+        row_queue.append(rr)
+        column_queue.append(cc)
+        visited[rr][cc]=True
+        nodes_in_next_layer= nodes_in_next_layer + 1
+        
+    return nodes_in_next_layer    
+
+
+def func_solve(row_queue,column_queue,visited,m,source,dest):
+    move_count=0
+    nodes_left_in_layer=1
+    nodes_in_next_layer=0
+    reached_end= False
+    
+    row_queue.append(source[0])
+    column_queue.append(source[1])
+    visited[source[0]][source[1]]=True
+
+    while len(row_queue) > 0: 
+    
+       r= row_queue.pop(0)
+       c= column_queue.pop(0)
+    
+       if [r,c]== dest: 
+          reached_end= True
+          break
+       nodes_in_next_layer=neigh(r,c,row_queue,column_queue,visited,m,nodes_in_next_layer)
+       
+       nodes_left_in_layer = nodes_left_in_layer - 1
+       if nodes_left_in_layer == 0: 
+         nodes_left_in_layer = nodes_in_next_layer
+         nodes_in_next_layer=0
+         move_count= move_count + 1
+    
+     
+    if reached_end == False: 
+         print (-1)
+    else:
+         print (move_count) 
+         
+
+
+R=5
+C=6
+
+m=[[0,1,0,0,0,0],
+   [0,0,0,0,0,0],
+   [0,1,0,1,0,0],
+   [0,1,0,0,1,0],
+   [0,0,0,0,1,0]]
+
+source=[0,0]
+dest=[4,5]
+
+row_queue=[]
+column_queue=[]
+
+
+
+
+
+visited=[[False,False,False,False,False,False],
+         [False,False,False,False,False,False],
+         [False,False,False,False,False,False],
+         [False,False,False,False,False,False],
+         [False,False,False,False,False,False]
+         ]
+
+
+func_solve(row_queue,column_queue,visited,m,source,dest)
+   
+
+"""
+R=5
+C=6
+
+m=[[0,1,0,0,0,0],
+   [0,0,0,0,0,0],
+   [0,1,0,1,0,0],
+   [0,1,0,0,1,0],
+   [0,0,0,0,1,0]]
+
+source=[0,0]
+dest=[4,5]
+
+row_queue=[]
+column_queue=[]
+
+move_count=0
+nodes_left_in_layer=1
+nodes_in_next_layer=0
+
+reached_end= False
+
+visited=[[False,False,False,False,False,False],
+         [False,False,False,False,False,False],
+         [False,False,False,False,False,False],
+         [False,False,False,False,False,False],
+         [False,False,False,False,False,False]
+         ]
+
+dr=[0,-1,-1,1,0,1,1,-1]
+dc=[-1,-1,0,-1,1,1,0,1]
+
+row_queue.append(source[0])
+column_queue.append(source[1])
+visited[source[0]][source[1]]=True
+
+while len(row_queue) > 0: 
+    
+    r= row_queue.pop(0)
+    c= column_queue.pop(0)
+    
+    if [r,c]== dest: 
+        reached_end= True
+        break
+    i=0
+    for i in range(len(dr)):
+        rr= r+ dr[i]
+        cc= c+ dc[i]
+    
+        if rr<0 or cc<0 : 
+          continue
+        if rr>=R or cc>=C :
+          continue
+    
+        if visited[rr][cc]== True:
+          continue
+        if m[rr][cc] == 1:
+          continue
+         
+        row_queue.append(rr)
+        column_queue.append(cc)
+        visited[rr][cc]=True
+        nodes_in_next_layer= nodes_in_next_layer + 1
+        
+    nodes_left_in_layer = nodes_left_in_layer - 1
+    if nodes_left_in_layer == 0: 
+        nodes_left_in_layer = nodes_in_next_layer
+        nodes_in_next_layer=0
+        move_count= move_count + 1
+    
+if reached_end == False: 
+        print(-1)
+else:
+        print(move_count)
+"""        

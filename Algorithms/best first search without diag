@@ -1,0 +1,145 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Fri Jul 24 16:14:35 2020
+
+@author: radhakrishna
+"""
+
+def calcHvalue(dest,rr,cc,h): 
+    delx= rr-dest[0]
+    if delx<0 :
+        delx=delx*-1
+    dely= cc-dest[1]
+    if dely<0: 
+        dely=dely* -1
+    
+    t=delx-dely
+    if t<0 :
+        t=t*-1
+    if h=="m" :
+        f= delx+dely
+        return f
+    if h=="e" :
+        f= (((delx)**2) + ((dely)**2))**0.5
+        return f
+    if h=="o" :
+        f= (1.414* min(delx,dely))+ t
+        return f
+    if h=="c" :
+        f=max(delx,dely)
+        return f
+
+def loop(heu,row,col,r,c,m,visited,nodes_in_next_layer,htype) : 
+    k=0
+    i=0
+    dr=[-1,1,0,0]
+    dc=[0,0,1,-1]
+    for i in range(len(dr)):
+          rr= r+ dr[i]
+          cc= c+ dc[i]
+    
+          if rr<0 or cc<0 : 
+            continue
+          if rr>=R or cc>=C :
+            continue
+    
+          if visited[rr][cc]== True:
+            continue
+          if m[rr][cc] == 1:
+            continue
+         
+        
+          f=calcHvalue(dest,rr,cc,htype)
+          heu.append(f.real)
+          row.append(rr)
+          col.append(cc)
+          k=k+1
+          visited[rr][cc]=True
+          nodes_in_next_layer= nodes_in_next_layer + 1
+    return nodes_in_next_layer      
+          
+        
+
+def func_solve(m,source,dest,row_queue,column_queue,visited,R,C):
+    move_count=0
+    nodes_left_in_layer=1
+    nodes_in_next_layer=0
+    reached_end= False
+    
+    
+    row_queue.append(source[0])
+    column_queue.append(source[1])
+    visited[source[0]][source[1]]=True
+
+    heu=[]
+    row=[]
+    col=[]
+
+    htype="c"
+    while len(row_queue) > 0: 
+    
+      r= row_queue.pop(0)
+      c= column_queue.pop(0)
+    
+      if [r,c]== dest: 
+          reached_end= True
+          break
+      
+      nodes_in_next_layer=loop(heu,row,col,r,c,m,visited,nodes_in_next_layer,htype)  
+         
+      j=0
+      for j in range(len(heu)): 
+        
+          ikea= min(heu)
+          mini = heu.index(ikea)
+          row_queue.append(row[mini])
+          column_queue.append(col[mini])
+          heu.pop(mini)
+        
+    
+      heu.clear()
+      row.clear()
+      col.clear()    
+      nodes_left_in_layer = nodes_left_in_layer - 1
+      if nodes_left_in_layer == 0: 
+          nodes_left_in_layer = nodes_in_next_layer
+          nodes_in_next_layer=0
+          move_count= move_count + 1
+    
+    if reached_end == False: 
+        print(-1)
+    else:
+        print(move_count)
+    
+    
+R=5
+C=6
+
+m=[[0,1,0,0,0,0],
+   [0,0,0,0,0,0],
+   [0,1,0,1,0,0],
+   [0,1,0,0,1,0],
+   [0,0,0,0,1,0]]
+
+source=[0,0]
+dest=[4,5]
+
+row_queue=[]
+column_queue=[]
+
+
+
+
+
+visited=[[False,False,False,False,False,False],
+         [False,False,False,False,False,False],
+         [False,False,False,False,False,False],
+         [False,False,False,False,False,False],
+         [False,False,False,False,False,False]
+         ]
+
+dr=[-1,1,0,0]
+dc=[0,0,1,-1]
+
+func_solve(m,source,dest,row_queue,column_queue,visited,R,C)
